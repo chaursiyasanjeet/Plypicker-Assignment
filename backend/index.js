@@ -3,9 +3,14 @@ const bodyParser = require("body-parser");
 const dotenv = require("dotenv");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const {
+  errorMiddelware,
+  pageNotFound,
+} = require("./middelware/errorMiddelware");
+
+const axios = require("axios");
 const auth = require("./routes/auth");
 const product = require("./routes/product");
-const axios = require("axios");
 const Product = require("./models/product");
 
 const app = express();
@@ -24,20 +29,16 @@ app.get("/", (req, res) => {
 app.use(auth);
 app.use(product);
 
-//error handler middleware
+//error handler page not found
 app.use((req, res, next) => {
   const err = new Error("page not found");
   err.status = 404;
   next(err);
 });
 
-//error handler
-app.use((err, req, res, next) => {
-  res.status(err.status || 500).json({
-    status: "FAILED",
-    message: err.message,
-  });
-});
+//error handler middleware
+app.use(pageNotFound);
+app.use(errorMiddelware);
 
 //saving the products through api
 const saveProducts = async () => {

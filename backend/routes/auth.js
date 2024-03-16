@@ -4,7 +4,7 @@ const User = require("../models/user");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
-router.post("/register", async (req, res) => {
+router.post("/register", async (req, res, next) => {
   try {
     const { name, email, password, admin } = req.body;
 
@@ -47,11 +47,11 @@ router.post("/register", async (req, res) => {
     return;
   } catch (error) {
     console.log(error);
-    res.status(500).json({ status: "FAILED", message: "Server error" });
+    next(error);
   }
 });
 
-router.post("/login", async (req, res) => {
+router.post("/login", async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
@@ -95,8 +95,7 @@ router.post("/login", async (req, res) => {
       jwtToken,
     });
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ status: "FAILED", message: "Server error" });
+    next(error);
   }
 });
 

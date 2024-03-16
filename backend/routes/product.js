@@ -4,7 +4,7 @@ const User = require("../models/user");
 const Product = require("../models/product");
 
 //fetching product details
-router.get("/products", async (req, res) => {
+router.get("/products", async (req, res, next) => {
   try {
     const allProducts = await Product.find();
 
@@ -16,12 +16,12 @@ router.get("/products", async (req, res) => {
     return;
   } catch (error) {
     console.log(error);
-    res.status(500).json({ status: "FAILED", message: "Server error" });
+    next(error);
   }
 });
 
 //Fetching product details by id
-router.get("/products/:id", async (req, res) => {
+router.get("/products/:id", async (req, res, next) => {
   try {
     const productId = req.params.id;
     const productDetails = await Product.findById(productId);
@@ -33,7 +33,7 @@ router.get("/products/:id", async (req, res) => {
     });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ status: "FAILED", message: "Server error" });
+    next(error);
   }
 });
 
