@@ -10,7 +10,7 @@ const productSchema = new mongoose.Schema({
     required: true,
   },
   image: {
-    type: String,
+    type: Array,
     required: true,
   },
   productDescription: {
@@ -35,4 +35,4 @@ const productSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("PlyPickerProductToReview", productSchema);
+module.exports = mongoose.model("PlyPickerProductReview", productSchema);

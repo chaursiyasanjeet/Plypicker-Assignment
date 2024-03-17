@@ -40,7 +40,7 @@ router.post("/register", async (req, res, next) => {
       admin,
     });
     await user.save();
-    res.json({
+    res.status(200).json({
       status: "SUCCESS",
       message: "User registered successfully",
     });
@@ -68,7 +68,7 @@ router.post("/login", async (req, res, next) => {
 
     //if use not found
     if (!userExist) {
-      res.status(500).json({
+      res.status(404).json({
         status: "FAILED",
         message: "user not exist,Please Register First",
       });
@@ -79,7 +79,7 @@ router.post("/login", async (req, res, next) => {
     const passwdMatched = await bcrypt.compare(password, userExist.password);
 
     if (!passwdMatched) {
-      res.status(500).json({
+      res.status(401).json({
         status: "FAILED",
         message: "wrong password",
       });
@@ -88,7 +88,7 @@ router.post("/login", async (req, res, next) => {
 
     const jwtToken = jwt.sign(userExist.toJSON(), process.env.JWT_SECRET);
 
-    res.json({
+    res.status(200).json({
       status: "SUCCESS",
       message: `${userExist.name} signed in successfully`,
       admin: userExist.admin,

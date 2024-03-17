@@ -12,14 +12,18 @@ const axios = require("axios");
 const auth = require("./routes/auth");
 const product = require("./routes/product");
 const Product = require("./models/product");
+const productReview = require("./routes/productReview");
 
 const app = express();
 
-app.use(cors({ origin: "*" }));
+dotenv.config();
 
+app.use(cors({ origin: "*" }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-dotenv.config();
+
+//For accessing image thourgh link
+app.use("/images", express.static("assets"));
 
 app.get("/", (req, res) => {
   res.json({ status: "ACTIVE", message: "Server is running" });
@@ -28,6 +32,7 @@ app.get("/", (req, res) => {
 //routings
 app.use(auth);
 app.use(product);
+app.use(productReview);
 
 //error handler page not found
 app.use((req, res, next) => {
