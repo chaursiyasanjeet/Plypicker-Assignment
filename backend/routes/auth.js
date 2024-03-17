@@ -3,13 +3,14 @@ const router = express.Router();
 const User = require("../models/user");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const verifyAuth = require("../middelware/verifyAuth");
 
 router.post("/register", async (req, res, next) => {
   try {
     const { name, email, password, admin } = req.body;
 
     //if anything is empty
-    if (!name || !email || !admin || !password) {
+    if (!name || !email || !password) {
       res.status(400).json({
         status: "FAILED",
         message: "Epmty fields",
@@ -99,4 +100,14 @@ router.post("/login", async (req, res, next) => {
   }
 });
 
+router.get("/verifyUserJWT", verifyAuth, async (req, res, next) => {
+  try {
+    res.status(200).json({
+      status: "SUCCESS",
+      admin: req.userExist.admin,
+    });
+  } catch (error) {
+    next(error);
+  }
+});
 module.exports = router;
