@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { requestDetails } from "../apis/product";
+import { getProductDetails, requestDetails } from "../apis/product";
 import { ToastContainer, toast } from "react-toastify";
 import { reviewRequest } from "../apis/product";
 
@@ -8,14 +8,29 @@ const PendingRequestDetails = () => {
   const redirect = useNavigate();
   const { id } = useParams();
   const [requestedChange, setRequestedChange] = useState(null);
-
+  const [difference, setDifference] = useState(null);
   useEffect(() => {
     async function getDetails() {
       const result = await requestDetails(id);
       setRequestedChange(result.productReview);
+      const productDetails = await getProductDetails(
+        result.productReview.productId
+      );
+
+      const tempDifference = {};
+      for (const key in productDetails.product) {
+        if (result.productReview.hasOwnProperty(key)) {
+          tempDifference[key] =
+            productDetails.product[key] !== result.productReview[key];
+        } else {
+          tempDifference[key] = true;
+        }
+      }
+      console.log(tempDifference);
+      setDifference(tempDifference);
     }
     getDetails();
-  });
+  }, []);
 
   const handleSumbit = async (approve) => {
     const result = await reviewRequest(requestedChange._id, approve);
@@ -34,7 +49,7 @@ const PendingRequestDetails = () => {
   return (
     <>
       <div className="w-full flex flex-col md:flex-row justify-between px-20 mt-10">
-        {requestedChange && (
+        {requestedChange && difference && (
           <>
             <div className="md:w-[50%] w-full h-[35vh] md:h-[60vh] rounded bg-blue-500 mb-3">
               <img
@@ -47,27 +62,43 @@ const PendingRequestDetails = () => {
             <div className="flex flex-col md:w-[45%] w-full md:m-0 rounded gap-2">
               <div>
                 <span className="font-bold">Department:</span>
-                <div className="w-full rounded-sm px-2 mb-2 border-black border-2">
+                <div
+                  className={`w-full rounded-sm px-2 mb-2 border-black border-2 ${
+                    difference.department ? "bg-yellow-300" : ""
+                  }`}
+                >
                   {requestedChange.department}
                 </div>
               </div>
               <div>
                 <span className="font-bold">Productname:</span>
-                <div className="rounded border-black border-2">
+                <div
+                  className={`w-full rounded-sm px-2 mb-2 border-black border-2 ${
+                    difference.productName ? "bg-yellow-300" : ""
+                  }`}
+                >
                   {requestedChange.productName}
                 </div>
               </div>
 
               <div>
                 <span className="font-bold">Price:</span>
-                <div className="border-black border-2">
+                <div
+                  className={`w-full rounded-sm px-2 mb-2 border-black border-2 ${
+                    difference.price ? "bg-yellow-300" : ""
+                  }`}
+                >
                   {requestedChange.price}
                 </div>
               </div>
 
               <div>
                 <span className="font-bold">ProductDescription:</span>
-                <div className="border-black border-2">
+                <div
+                  className={`w-full rounded-sm px-2 mb-2 border-black border-2 ${
+                    difference.productDescription ? "bg-yellow-300" : ""
+                  }`}
+                >
                   {requestedChange.productDescription}
                 </div>
               </div>
