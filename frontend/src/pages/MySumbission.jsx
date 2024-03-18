@@ -1,17 +1,17 @@
 import { useEffect, useState, useContext } from "react";
-import { getProducts } from "../apis/product";
+import { allRequests } from "../apis/product";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../components/context/authContext";
 
-const Dashboard = () => {
+const MySubmission = () => {
   const [products, setProducts] = useState([]);
   const redirect = useNavigate();
   const { isLogin } = useContext(AuthContext);
 
   useEffect(() => {
     async function apiCall() {
-      const result = await getProducts();
-      setProducts(result.product);
+      const result = await allRequests();
+      setProducts(result.productReview);
     }
     apiCall();
   }, []);
@@ -23,9 +23,6 @@ const Dashboard = () => {
           <div
             className="block rounded-lg bg-white w-[45%] md:w-[20%] cursor-pointer"
             key={index}
-            onClick={() => {
-              redirect(`/product/${item._id}`);
-            }}
           >
             <div className="relative overflow-hidden bg-cover bg-no-repeat h-[30vh]">
               <img
@@ -47,6 +44,9 @@ const Dashboard = () => {
                 Price: ₹ {item.price}
               </h5>
             </div>
+            <div className="text-center w-[100%] h-[5vh] font-bold text-lg uppercase rounded-sm bg-yellow-600">
+              {item.status}
+            </div>
           </div>
         );
       })}
@@ -54,4 +54,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default MySubmission;

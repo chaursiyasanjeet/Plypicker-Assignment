@@ -10,6 +10,9 @@ const Login = () => {
 
   const redirect = useNavigate();
 
+  // if (isLogin) {
+  //   redirect(`/dashboard/${userType}`);
+  // }
   useEffect(() => {
     if (isLogin) {
       redirect(`/dashboard/${userType}`);
@@ -54,10 +57,11 @@ const Login = () => {
       if (result.status === "SUCCESS") {
         toast.success(result.message);
         localStorage.setItem("plyPickerToken", result.jwtToken);
-        setUserType(result.status.admin ? "admin" : "teamMember");
         setTimeout(() => {
+          const user = result.admin ? "admin" : "teamMember";
+          setUserType(user);
           setIsLogin(true);
-          redirect(`/dashboard/${userType}`);
+          redirect(`/dashboard/${user}`);
         }, 2000);
       } else {
         toast.error(result.message);

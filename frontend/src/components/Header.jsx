@@ -32,9 +32,14 @@ const Header = () => {
           <div
             className={`${
               toggle ? "flex" : "hidden"
-            } absolute top-[10vh] right-0 bg-yellow-300 flex-col w-[30vw] md:w-[15vw] gap-1 p-2`}
+            } absolute top-[10vh] right-0 bg-yellow-300 flex-col w-[30vw] md:w-[15vw] gap-1 p-2 z-10`}
           >
-            <button className="font-bold cursor-pointer text-lg bg-yellow-500 rounded-lg text-center">
+            <button
+              className="font-bold cursor-pointer text-lg bg-yellow-500 rounded-lg text-center"
+              onClick={() => {
+                redirect("/profile");
+              }}
+            >
               My Profile
             </button>
             <button
