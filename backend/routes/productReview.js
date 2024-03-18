@@ -14,7 +14,9 @@ router.get("/allRequests", verifyAuth, async (req, res, next) => {
   try {
     //If user is admin then all product to review will be sent
     if (req.userExist.admin) {
-      const reviews = await ProductReview.find();
+      const reviews = await ProductReview.find({
+        status: "pending",
+      });
       return res.status(200).json({
         status: "SUCCESS",
         productReview: reviews,
@@ -22,7 +24,7 @@ router.get("/allRequests", verifyAuth, async (req, res, next) => {
     }
 
     //If user is team member the only product which request to review will be sent
-    const productReview = await ProductReview.findOne({
+    const productReview = await ProductReview.find({
       userId: req.userExist._id,
     });
 
