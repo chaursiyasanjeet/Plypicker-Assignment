@@ -55,7 +55,7 @@ const PendingRequestDetails = () => {
               <img
                 src={requestedChange.image}
                 alt="productImage"
-                className="rounded mb-2 md:h-[70%] w-full h-full"
+                className="rounded mb-2 md:h-[100%] w-full h-full"
               />
             </div>
 
