@@ -14,12 +14,14 @@ router.get("/allRequests", verifyAuth, async (req, res, next) => {
   try {
     //If user is admin then all product to review will be sent
     if (req.userExist.admin) {
-      const reviews = await ProductReview.find({
-        status: "pending",
-      });
+      const reviews = await ProductReview.find();
       return res.status(200).json({
         status: "SUCCESS",
         productReview: reviews,
+        userDetails: {
+          name: req.userExist.name,
+          email: req.userExist.email,
+        },
       });
     }
 
@@ -31,6 +33,10 @@ router.get("/allRequests", verifyAuth, async (req, res, next) => {
     res.status(200).json({
       status: "SUCCESS",
       productReview: productReview,
+      userDetails: {
+        name: req.userExist.name,
+        email: req.userExist.email,
+      },
     });
   } catch (error) {
     next(error);
@@ -63,7 +69,7 @@ router.post(
       const productId = req.params.id;
 
       //If an image is also sent for updating
-      if (req.files.length > 0) {
+      if (req.files && req.files.length > 0) {
         const imageUrl = `${process.env.BACKEND_URL}/images/${
           req.files[req.files.length - 1].filename
         }`;
@@ -171,7 +177,7 @@ router.post("/reviewRequest/:id", verifyAuth, async (req, res, next) => {
 
     return res.status(200).json({
       status: "SUCCESS",
-      messages: "Request Approved",
+      message: "Request Approved",
     });
   } catch (error) {
     next(error);
